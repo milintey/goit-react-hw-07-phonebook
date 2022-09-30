@@ -1,14 +1,16 @@
 import { GlobalStyle } from '../components/GlobalStyle/GlobalStyle';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectIsLoading } from 'redux/selectors';
+import { selectIsLoading, contactsState } from 'redux/selectors';
 import { fetchContacts } from 'redux/operations';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
+import { Loader } from './Loader/Loader';
 
 export const App = () => {
   const dispatch = useDispatch();
+  const contactsItem = useSelector(contactsState);
   const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
@@ -22,9 +24,9 @@ export const App = () => {
 
       <Filter />
 
-      {isLoading && <div>LOADING</div>}
+      {isLoading && <Loader />}
 
-      {!isLoading && <ContactList />}
+      {contactsItem && <ContactList />}
 
       <GlobalStyle />
     </div>

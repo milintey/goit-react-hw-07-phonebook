@@ -1,9 +1,9 @@
-export const filterContact = (contacts, filterState) => {
+export const filterContact = (contacts, filtere) => {
 
-  if (filterState === "") {
+  if (filtere === "") {
     return contacts;
   }
   return contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filterState.toLowerCase().trim())
+    contact.name.toLowerCase().includes(filtere)
   );
 }

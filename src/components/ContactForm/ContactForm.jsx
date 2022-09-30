@@ -1,39 +1,37 @@
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { Formik, Form, ErrorMessage } from 'formik';
-import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/operations';
+// import * as yup from 'yup';
 import { FormButton, FormInput } from './ContactForm.styled';
-import { useSelector } from 'react-redux';
 import { contactsState } from 'redux/selectors';
 
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  number: yup.number().required(),
-});
+// const schema = yup.object().shape({
+//   name: yup.string().required(),
+//   phone: yup.number().required(),
+// });
 
 const initialValues = {
   name: '',
-  number: '',
+  phone: '',
 };
 
 export const ContactForm = () => {
   const contactsItem = useSelector(contactsState);
+  const dispatch = useDispatch();
 
   const formSubmit = (value, { resetForm }) => {
-    const contact = {
-      ...value,
-      id: nanoid(),
-    };
-
-    if (contactsItem.some(cont => cont.name === contact.name)) {
-      alert(`${contact.name} is already in contacts`);
+    if (contactsItem.some(cont => cont.name === value.name)) {
+      alert(`${value.name} is already in contacts`);
       return;
     }
 
-    if (contactsItem.some(cont => cont.number === contact.number)) {
-      alert(`User number ${contact.number} already exists`);
+    if (contactsItem.some(cont => cont.phone === value.phone)) {
+      alert(`User number ${value.phone} already exists`);
       return;
     }
 
+    dispatch(addContact(value));
     resetForm();
   };
 
@@ -41,7 +39,7 @@ export const ContactForm = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={formSubmit}
-      validationSchema={schema}
+      // validationSchema={schema}
     >
       <Form>
         <label>
@@ -57,12 +55,12 @@ export const ContactForm = () => {
         <label>
           <FormInput
             type="tel"
-            name="number"
+            name="phone"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
-          <ErrorMessage name="number" component="div" />
+          {/* <ErrorMessage name="number" component="div" /> */}
         </label>
         <FormButton type="submit">Add Contact</FormButton>
       </Form>
